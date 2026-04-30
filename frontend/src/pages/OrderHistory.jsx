@@ -10,7 +10,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/orders');
+        const res = await axios.get('https://food-app-backend-y263.onrender.com/orders');
         setOrders(res.data);
       } catch (error) {
         console.error(error);
@@ -55,13 +55,12 @@ const OrderHistory = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
-                  <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold border ${
-                    order.status === 'completed' 
-                      ? 'bg-green-500/10 text-green-500 border-green-500/20' 
+                  <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold border ${order.status === 'completed'
+                      ? 'bg-green-500/10 text-green-500 border-green-500/20'
                       : 'bg-orange-500/10 text-orange-500 border-orange-500/20'
-                  }`}>
+                    }`}>
                     {order.status === 'completed' ? <CheckCircle2 className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
                     <span className="capitalize">{order.status}</span>
                   </div>

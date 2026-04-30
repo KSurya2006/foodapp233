@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('add_food');
-  
+
   // Food Form State
   const [formData, setFormData] = useState({
     name: '',
@@ -27,7 +27,7 @@ const Admin = () => {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:3000/admin/food', {
+      await axios.post('https://food-app-backend-y263.onrender.com/admin/food', {
         ...formData,
         price: parseFloat(formData.price)
       });
@@ -44,7 +44,7 @@ const Admin = () => {
   const fetchOrders = async () => {
     setLoadingOrders(true);
     try {
-      const res = await axios.get('http://localhost:3000/orders');
+      const res = await axios.get('https://food-app-backend-y263.onrender.com/orders');
       setOrders(res.data);
     } catch (error) {
       toast.error('Failed to fetch orders');
@@ -61,7 +61,7 @@ const Admin = () => {
 
   const updateOrderStatus = async (id, status) => {
     try {
-      await axios.put(`http://localhost:3000/admin/orders/${id}/status`, { status });
+      await axios.put(`https://food-app-backend-y263.onrender.com/admin/orders/${id}/status`, { status });
       toast.success(`Order #${id} marked as ${status}`);
       fetchOrders();
     } catch (error) {
@@ -78,15 +78,15 @@ const Admin = () => {
           </h1>
           <p className="text-gray-400">Manage your menu and orders.</p>
         </div>
-        
+
         <div className="flex bg-darker p-1 rounded-xl border border-gray-800">
-          <button 
+          <button
             onClick={() => setActiveTab('add_food')}
             className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'add_food' ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'text-gray-400 hover:text-white'}`}
           >
             Add Food
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('orders')}
             className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'orders' ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'text-gray-400 hover:text-white'}`}
           >
@@ -110,7 +110,7 @@ const Admin = () => {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Double Cheese Margherita"
                     className="w-full pl-11 pr-4 py-3 bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     required
@@ -129,7 +129,7 @@ const Admin = () => {
                       type="number"
                       step="0.01"
                       value={formData.price}
-                      onChange={(e) => setFormData({...formData, price: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       placeholder="12.99"
                       className="w-full pl-11 pr-4 py-3 bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                       required
@@ -145,7 +145,7 @@ const Admin = () => {
                     </div>
                     <select
                       value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       className="w-full pl-11 pr-4 py-3 bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all appearance-none"
                     >
                       <option value="Burger">Burger</option>
@@ -165,7 +165,7 @@ const Admin = () => {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                     placeholder="https://images.unsplash.com/..."
                     className="w-full pl-11 pr-4 py-3 bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                     required
@@ -193,9 +193,9 @@ const Admin = () => {
             <div className="mt-8 border-t border-gray-800 pt-6">
               <h4 className="text-sm font-medium text-gray-400 mb-3">Image Preview</h4>
               <div className="w-full h-48 rounded-xl overflow-hidden border border-gray-800 relative">
-                <img 
-                  src={formData.image_url} 
-                  alt="Preview" 
+                <img
+                  src={formData.image_url}
+                  alt="Preview"
                   className="w-full h-full object-cover"
                   onError={(e) => e.target.src = 'https://via.placeholder.com/400x300?text=Invalid+Image+URL'}
                 />
@@ -206,9 +206,9 @@ const Admin = () => {
       ) : (
         <div className="space-y-6 animate-fade-in">
           {loadingOrders ? (
-             <div className="flex justify-center py-20">
-               <div className="w-12 h-12 border-4 border-gray-800 border-t-primary rounded-full animate-spin"></div>
-             </div>
+            <div className="flex justify-center py-20">
+              <div className="w-12 h-12 border-4 border-gray-800 border-t-primary rounded-full animate-spin"></div>
+            </div>
           ) : orders.length === 0 ? (
             <div className="text-center py-20 glass rounded-3xl border border-gray-800">
               <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -230,13 +230,13 @@ const Admin = () => {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-4">
                     <div className="flex flex-col items-end">
                       <span className="text-xs text-gray-400 mb-1">Total Amount</span>
                       <span className="text-2xl font-black gradient-text">₹{order.total_price.toFixed(2)}</span>
                     </div>
-                    
+
                     {order.status === 'pending' ? (
                       <button
                         onClick={() => updateOrderStatus(order.id, 'completed')}
