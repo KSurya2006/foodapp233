@@ -27,7 +27,7 @@ const Admin = () => {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:3000/admin/food', {
+      await axios.post('https://foodapp233.onrender.com/admin', {
         ...formData,
         price: parseFloat(formData.price)
       });
@@ -44,7 +44,7 @@ const Admin = () => {
   const fetchOrders = async () => {
     setLoadingOrders(true);
     try {
-      const res = await axios.get('http://localhost:3000/orders');
+      const res = await axios.get('https://foodapp233.onrender.com/orders');
       setOrders(res.data);
     } catch (error) {
       toast.error('Failed to fetch orders');
