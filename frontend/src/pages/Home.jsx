@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/food');
+        const res = await axios.get("https://your-backend-name.onrender.com/food");
         setFoods(res.data);
       } catch (error) {
         console.error(error);
