@@ -10,7 +10,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/orders');
+        const res = await axios.get('https://foodapp233.onrender.com/users');
         setOrders(res.data);
       } catch (error) {
         console.error(error);
