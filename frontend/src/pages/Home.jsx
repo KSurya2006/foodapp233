@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await axios.get('https://food-app-backend-y263.onrender.com/food');
+        const res = await axios.get('https://foodapp233.onrender.com/food');
         setFoods(res.data);
       } catch (error) {
         console.error(error);

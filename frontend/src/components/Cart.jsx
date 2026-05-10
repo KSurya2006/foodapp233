@@ -28,7 +28,7 @@ const Cart = () => {
         user_id: user?.uid || 'guest_id'
       };
 
-      await axios.post('http://localhost:3000/order', orderData);
+      await axios.post('https://foodapp233.onrender.com/orders', orderData);
       toast.success('Order placed successfully!');
       clearCart();
       setIsCartOpen(false);

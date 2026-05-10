@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import OrderHistory from './pages/OrderHistory';
 import Admin from './pages/Admin';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 // Protected Route for Admin
 const AdminRoute = ({ children }) => {
@@ -67,6 +68,7 @@ function App() {
                   <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
                   <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
                   <Route path="/orders" element={user ? <OrderHistory /> : <Navigate to="/login" />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 </Routes>
               </main>
             </>

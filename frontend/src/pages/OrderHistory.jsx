@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Clock, CheckCircle2, Package, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { auth } from '../firebase';
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
@@ -10,7 +11,12 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('https://food-app-backend-y263.onrender.com/orders');
+        const user_id = auth.currentUser?.uid;
+        if (!user_id) {
+          toast.error('User not authenticated');
+          return;
+        }
+        const res = await axios.get(`https://foodapp233.onrender.com/orders?user_id=${user_id}`);
         setOrders(res.data);
       } catch (error) {
         console.error(error);
@@ -58,8 +64,8 @@ const OrderHistory = () => {
 
                 <div className="flex items-center gap-4">
                   <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold border ${order.status === 'completed'
-                      ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                      : 'bg-orange-500/10 text-orange-500 border-orange-500/20'
+                    ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                    : 'bg-orange-500/10 text-orange-500 border-orange-500/20'
                     }`}>
                     {order.status === 'completed' ? <CheckCircle2 className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
                     <span className="capitalize">{order.status}</span>

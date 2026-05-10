@@ -27,7 +27,7 @@ const Admin = () => {
 
     setLoading(true);
     try {
-      await axios.post('https://food-app-backend-y263.onrender.com/admin/food', {
+      await axios.post('https://foodapp233.onrender.com/admin/food', {
         ...formData,
         price: parseFloat(formData.price)
       });
@@ -44,7 +44,7 @@ const Admin = () => {
   const fetchOrders = async () => {
     setLoadingOrders(true);
     try {
-      const res = await axios.get('https://food-app-backend-y263.onrender.com/orders');
+      const res = await axios.get('https://foodapp233.onrender.com/orders');
       setOrders(res.data);
     } catch (error) {
       toast.error('Failed to fetch orders');
@@ -61,7 +61,7 @@ const Admin = () => {
 
   const updateOrderStatus = async (id, status) => {
     try {
-      await axios.put(`https://food-app-backend-y263.onrender.com/admin/orders/${id}/status`, { status });
+      await axios.put(`https://foodapp233.onrender.com/admin/orders/${id}/status`, { status });
       toast.success(`Order #${id} marked as ${status}`);
       fetchOrders();
     } catch (error) {

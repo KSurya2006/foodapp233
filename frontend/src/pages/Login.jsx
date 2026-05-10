@@ -68,7 +68,7 @@ const Login = () => {
       const result = await window.confirmationResult.confirm(otp);
       
       try {
-        await axios.post('https://food-app-backend-y263.onrender.com/users', {
+        await axios.post('https://foodapp233.onrender.com/users', {
           id: result.user.uid,
           phone_number: result.user.phoneNumber,
           name: name
