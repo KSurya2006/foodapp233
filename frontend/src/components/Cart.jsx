@@ -11,6 +11,20 @@ const Cart = () => {
 
   if (!isCartOpen) return null;
 
+  const loadRazorpaySDK = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handleOrder = async () => {
     if (cartItems.length === 0) {
       toast.error('Cart is empty!');
@@ -19,6 +33,13 @@ const Cart = () => {
 
     setIsOrdering(true);
     try {
+      const isSdkLoaded = await loadRazorpaySDK();
+      if (!isSdkLoaded) {
+        toast.error('Failed to load payment gateway.');
+        setIsOrdering(false);
+        return;
+      }
+
       const user = auth.currentUser;
       const orderData = {
         items: cartItems,
@@ -28,14 +49,50 @@ const Cart = () => {
         user_id: user?.uid || 'guest_id'
       };
 
-      await axios.post('https://foodapp233.onrender.com/orders', orderData);
-      toast.success('Order placed successfully!');
-      clearCart();
-      setIsCartOpen(false);
+      const options = {
+        key: 'rzp_test_TYpo9o6', // Demo key
+        amount: Math.round(totalPrice * 100), // amount in paise
+        currency: 'INR',
+        name: 'FoodApp Premium',
+        description: 'Food Order Payment',
+        handler: async function (response) {
+          try {
+            // After successful payment, place the order on backend
+            await axios.post('https://foodapp233.onrender.com/order', orderData);
+            toast.success(`Payment successful! ID: ${response.razorpay_payment_id}`);
+            clearCart();
+            setIsCartOpen(false);
+          } catch (error) {
+            console.error(error);
+            toast.error('Payment succeeded but failed to save order.');
+          } finally {
+            setIsOrdering(false);
+          }
+        },
+        prefill: {
+          name: 'Customer',
+          contact: user?.phoneNumber || '9999999999',
+        },
+        theme: {
+          color: '#f97316' // Tailwind orange-500
+        },
+        modal: {
+          ondismiss: function() {
+            setIsOrdering(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        toast.error(response.error.description || 'Payment failed.');
+        setIsOrdering(false);
+      });
+      rzp.open();
+
     } catch (error) {
       console.error(error);
-      toast.error('Failed to place order.');
-    } finally {
+      toast.error('Something went wrong.');
       setIsOrdering(false);
     }
   };
