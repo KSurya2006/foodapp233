@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { X, Minus, Plus, ShoppingBag, ArrowRight } from 'lucide-react';
+import { X, Minus, Plus, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import { useCart } from '../store/CartContext';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { auth } from '../firebase';
 
 const Cart = () => {
-  const { isCartOpen, setIsCartOpen, cartItems, updateQuantity, totalPrice, clearCart } = useCart();
+  const { isCartOpen, setIsCartOpen, cartItems, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const [isOrdering, setIsOrdering] = useState(false);
 
   if (!isCartOpen) return null;
@@ -105,6 +105,12 @@ const Cart = () => {
                       className="p-1 bg-gray-800 rounded-md hover:bg-gray-700"
                     >
                       <Plus className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => removeFromCart(item.id)}
+                      className="p-1 ml-auto text-red-500 hover:bg-red-500/10 rounded-md"
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
