@@ -35,7 +35,7 @@ const Cart = () => {
       };
 
       const options = {
-        key: 'rzp_test_TYpo9o6', // Demo key
+        key: 'rzp_test_So5YTBCUuLHHse', // User's demo key
         amount: Math.round(totalPrice * 100), // amount in paise
         currency: 'INR',
         name: 'FoodApp Premium',
