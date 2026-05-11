@@ -11,20 +11,6 @@ const Cart = () => {
 
   if (!isCartOpen) return null;
 
-  const loadRazorpaySDK = () => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
   const handleOrder = async () => {
     if (cartItems.length === 0) {
       toast.error('Cart is empty!');
@@ -33,9 +19,8 @@ const Cart = () => {
 
     setIsOrdering(true);
     try {
-      const isSdkLoaded = await loadRazorpaySDK();
-      if (!isSdkLoaded) {
-        toast.error('Failed to load payment gateway.');
+      if (!window.Razorpay) {
+        toast.error('Failed to load payment gateway. Please disable adblockers or refresh.');
         setIsOrdering(false);
         return;
       }
