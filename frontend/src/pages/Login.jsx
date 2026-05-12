@@ -3,8 +3,9 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { ArrowRight, Utensils, ShieldCheck, Lock, ShieldAlert } from 'lucide-react';
+import { ArrowRight, Utensils, ShieldCheck, Lock, ShieldAlert, Sparkles } from 'lucide-react';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Login = () => {
   const [loginMode, setLoginMode] = useState('user'); // 'user' or 'admin'
@@ -77,7 +78,7 @@ const Login = () => {
         console.error('Failed to save user to DB:', err);
       }
 
-      toast.success(`Welcome, ${name}!`);
+      toast.success(`Welcome, ${name}! 🎉`);
       navigate('/');
     } catch (error) {
       console.error(error);
@@ -104,173 +105,264 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-dark flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Decor */}
-      <div className={`absolute top-[-10%] left-[-10%] w-[40%] h-[40%] blur-[120px] rounded-full pointer-events-none transition-colors duration-500 ${loginMode === 'admin' ? 'bg-red-500/20' : 'bg-primary/20'}`}></div>
-      <div className={`absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] blur-[120px] rounded-full pointer-events-none transition-colors duration-500 ${loginMode === 'admin' ? 'bg-gray-600/20' : 'bg-orange-600/20'}`}></div>
+      {/* Background Effects */}
+      <div className={`absolute top-[-15%] left-[-15%] w-[45%] h-[45%] blur-[120px] rounded-full pointer-events-none transition-all duration-700 ${
+        loginMode === 'admin' ? 'bg-red-500/15' : 'bg-primary/12'
+      }`}></div>
+      <div className={`absolute bottom-[-15%] right-[-15%] w-[45%] h-[45%] blur-[120px] rounded-full pointer-events-none transition-all duration-700 ${
+        loginMode === 'admin' ? 'bg-gray-600/15' : 'bg-orange-500/10'
+      }`}></div>
       
-      <div className="w-full max-w-md">
-        <div className="glass rounded-3xl p-8 md:p-10 shadow-2xl border border-white/10 relative z-10 animate-slide-up">
+      {/* Floating Decorative Elements */}
+      <div className="absolute top-[20%] right-[20%] text-4xl opacity-10 float select-none pointer-events-none">🍕</div>
+      <div className="absolute bottom-[30%] left-[15%] text-3xl opacity-10 float select-none pointer-events-none" style={{ animationDelay: '1s' }}>🍔</div>
+      <div className="absolute top-[60%] right-[10%] text-3xl opacity-10 float select-none pointer-events-none" style={{ animationDelay: '2s' }}>🥤</div>
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
+      >
+        <div className="bg-surface/80 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-2xl shadow-black/30 border border-gray-800/60 relative z-10">
           
-          <div className="flex bg-darker p-1 rounded-xl border border-gray-800 mb-8">
+          {/* Mode Toggle */}
+          <div className="flex bg-darker p-1 rounded-xl border border-gray-800/60 mb-7">
             <button 
               onClick={() => setLoginMode('user')}
-              className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${loginMode === 'user' ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'text-gray-400 hover:text-white'}`}
+              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
+                loginMode === 'user' 
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                  : 'text-gray-500 hover:text-white'
+              }`}
             >
               Customer
             </button>
             <button 
               onClick={() => setLoginMode('admin')}
-              className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${loginMode === 'admin' ? 'bg-gray-700 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
+                loginMode === 'admin' 
+                  ? 'bg-gray-700 text-white shadow-lg' 
+                  : 'text-gray-500 hover:text-white'
+              }`}
             >
               Admin
             </button>
           </div>
 
-          <div className="flex justify-center mb-8">
-            {loginMode === 'user' ? (
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-orange-500 flex items-center justify-center shadow-lg shadow-primary/30 rotate-12 group hover:rotate-0 transition-transform duration-300">
-                <Utensils className="w-8 h-8 text-white" />
-              </div>
-            ) : (
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-gray-800 to-gray-600 flex items-center justify-center shadow-lg border border-gray-700 group hover:rotate-12 transition-transform duration-300">
-                <ShieldAlert className="w-8 h-8 text-white" />
-              </div>
-            )}
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <AnimatePresence mode="wait">
+              {loginMode === 'user' ? (
+                <motion.div
+                  key="user-logo"
+                  initial={{ scale: 0.8, rotate: -12 }}
+                  animate={{ scale: 1, rotate: 12 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  whileHover={{ rotate: 0, scale: 1.1 }}
+                  className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center shadow-lg shadow-primary/25 cursor-default"
+                >
+                  <Utensils className="w-7 h-7 text-white" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="admin-logo"
+                  initial={{ scale: 0.8, rotate: 12 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center shadow-lg border border-gray-700 cursor-default"
+                >
+                  <ShieldAlert className="w-7 h-7 text-white" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          <div className="text-center mb-8">
-            {loginMode === 'user' ? (
-              <>
-                <h1 className="text-3xl font-extrabold mb-2">
-                  Food<span className="gradient-text">App</span>
-                </h1>
-                <p className="text-gray-400">Sign in to crave your hunger</p>
-              </>
-            ) : (
-              <>
-                <h1 className="text-3xl font-extrabold mb-2 text-white">Admin Portal</h1>
-                <p className="text-gray-400">Restricted Access Only</p>
-              </>
-            )}
+          {/* Title */}
+          <div className="text-center mb-7">
+            <AnimatePresence mode="wait">
+              {loginMode === 'user' ? (
+                <motion.div key="user-title" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <h1 className="text-2xl font-black mb-1">
+                    Food<span className="gradient-text">App</span>
+                  </h1>
+                  <p className="text-sm text-gray-500">Sign in to satisfy your cravings</p>
+                </motion.div>
+              ) : (
+                <motion.div key="admin-title" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <h1 className="text-2xl font-black mb-1 text-white">Admin Portal</h1>
+                  <p className="text-sm text-gray-500">Restricted Access Only</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {loginMode === 'user' ? (
-            !isOtpSent ? (
-              <form onSubmit={sendOtp} className="space-y-5 animate-fade-in">
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-600"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-1">Phone Number</label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-4 py-3 bg-darker/80 border border-r-0 border-gray-800 rounded-l-xl text-gray-400 font-medium">
-                      +91
-                    </span>
+          {/* Forms */}
+          <AnimatePresence mode="wait">
+            {loginMode === 'user' ? (
+              !isOtpSent ? (
+                <motion.form 
+                  key="phone-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  onSubmit={sendOtp} 
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
                     <input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="98765 43210"
-                      className="w-full px-4 py-3 bg-darker/50 border border-gray-800 rounded-r-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-600"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="John Doe"
+                      className="input-premium"
                       required
                     />
                   </div>
-                </div>
-
-                <div id="recaptcha-container"></div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 bg-gradient-to-r from-primary to-orange-500 hover:from-orange-500 hover:to-primary text-white rounded-xl font-bold shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                >
-                  {loading ? 'Sending OTP...' : 'Continue'}
-                  {!loading && <ArrowRight className="w-5 h-5" />}
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={verifyOtp} className="space-y-5 animate-fade-in">
-                <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-start gap-3 mb-6">
-                  <ShieldCheck className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-bold text-primary">Verification Code</h4>
-                    <p className="text-xs text-gray-400 mt-1">We've sent a 6-digit code to {phoneNumber}</p>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Phone Number</label>
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3.5 py-3.5 bg-darker border border-r-0 border-gray-800 rounded-l-xl text-gray-500 font-medium text-sm">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder="98765 43210"
+                        className="input-premium rounded-l-none border-l-0"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
+                  <div id="recaptcha-container"></div>
+
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3.5 btn-primary rounded-xl flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Sending OTP...
+                      </>
+                    ) : (
+                      <>Continue <ArrowRight className="w-4 h-4" /></>
+                    )}
+                  </motion.button>
+                </motion.form>
+              ) : (
+                <motion.form 
+                  key="otp-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  onSubmit={verifyOtp} 
+                  className="space-y-4"
+                >
+                  <div className="bg-primary/5 border border-primary/15 rounded-xl p-3.5 flex items-start gap-3 mb-2">
+                    <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs font-bold text-primary">Verification Code</h4>
+                      <p className="text-[11px] text-gray-500 mt-0.5">Sent to {phoneNumber}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Enter OTP</label>
+                    <input
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      placeholder="• • • • • •"
+                      className="input-premium text-center tracking-[0.8em] text-xl font-bold"
+                      maxLength="6"
+                      required
+                    />
+                  </div>
+
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3.5 btn-primary rounded-xl flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify & Login'
+                    )}
+                  </motion.button>
+                  
+                  <div className="text-center mt-3">
+                    <button 
+                      type="button" 
+                      onClick={() => setIsOtpSent(false)}
+                      className="text-xs text-gray-500 hover:text-white transition-colors"
+                    >
+                      Change phone number
+                    </button>
+                  </div>
+                </motion.form>
+              )
+            ) : (
+              <motion.form 
+                key="admin-form"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                onSubmit={handleAdminLogin} 
+                className="space-y-4"
+              >
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-1">Enter OTP</label>
-                  <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="• • • • • •"
-                    className="w-full px-4 py-4 text-center tracking-[1em] text-2xl font-bold bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-600"
-                    maxLength="6"
-                    required
-                  />
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Secret PIN</label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600" />
+                    <input
+                      type="password"
+                      value={pin}
+                      onChange={(e) => setPin(e.target.value)}
+                      placeholder="••••"
+                      maxLength="4"
+                      className="input-premium pl-11 text-center tracking-[1em] text-xl font-bold"
+                      required
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-600 text-center mt-2">Default: 1234</p>
                 </div>
 
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-gradient-to-r from-primary to-orange-500 hover:from-orange-500 hover:to-primary text-white rounded-xl font-bold shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                  className="w-full py-3.5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 border border-gray-600 text-white rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                 >
-                  {loading ? 'Verifying...' : 'Verify & Login'}
-                </button>
-                
-                <div className="text-center mt-4">
-                  <button 
-                    type="button" 
-                    onClick={() => setIsOtpSent(false)}
-                    className="text-sm text-gray-400 hover:text-white transition-colors"
-                  >
-                    Change phone number
-                  </button>
-                </div>
-              </form>
-            )
-          ) : (
-            <form onSubmit={handleAdminLogin} className="space-y-5 animate-fade-in">
-              <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Secret PIN</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-500" />
-                  </div>
-                  <input
-                    type="password"
-                    value={pin}
-                    onChange={(e) => setPin(e.target.value)}
-                    placeholder="••••"
-                    maxLength="4"
-                    className="w-full pl-11 pr-4 py-4 text-center tracking-[1em] text-2xl font-bold bg-darker/50 border border-gray-800 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all placeholder-gray-600"
-                    required
-                  />
-                </div>
-                <p className="text-xs text-gray-500 text-center mt-2">Hint: Default PIN is 1234</p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 border border-gray-600 text-white rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-              >
-                {loading ? 'Verifying...' : 'Access Dashboard'}
-                {!loading && <ArrowRight className="w-5 h-5" />}
-              </button>
-            </form>
-          )}
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Verifying...
+                    </>
+                  ) : (
+                    <>Access Dashboard <ArrowRight className="w-4 h-4" /></>
+                  )}
+                </motion.button>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
+
+        {/* Footer */}
+        <p className="text-center text-[10px] text-gray-700 mt-4">
+          By continuing, you agree to our Terms of Service
+        </p>
+      </motion.div>
     </div>
   );
 };

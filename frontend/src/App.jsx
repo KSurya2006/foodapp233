@@ -12,6 +12,9 @@ import OrderHistory from './pages/OrderHistory';
 import Admin from './pages/Admin';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 
+import Profile from './pages/Profile';
+import BottomNav from './components/BottomNav';
+
 // Protected Route for Admin
 const AdminRoute = ({ children }) => {
   const isAdmin = localStorage.getItem('adminToken') === 'true';
@@ -63,14 +66,16 @@ function App() {
             <>
               {user && <Navbar user={user} />}
               {user && <Cart />}
-              <main className="pb-20">
+              <main className="pb-24">
                 <Routes>
                   <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
                   <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
                   <Route path="/orders" element={user ? <OrderHistory /> : <Navigate to="/login" />} />
+                  <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 </Routes>
               </main>
+              {user && <BottomNav />}
             </>
           } />
         </Routes>
