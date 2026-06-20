@@ -4,6 +4,7 @@ import { Clock, CheckCircle2, Package, ChefHat, Bike, ClipboardList, RefreshCw }
 import toast from 'react-hot-toast';
 import { auth } from '../firebase';
 import { motion } from 'framer-motion';
+import { API_BASE } from '../config';
 
 const ORDER_STATUSES = ['pending', 'preparing', 'out_for_delivery', 'completed'];
 
@@ -67,7 +68,7 @@ const OrderHistory = () => {
         toast.error('User not authenticated');
         return;
       }
-      const res = await axios.get(`https://foodapp233.onrender.com/orders?user_id=${user_id}`);
+      const res = await axios.get(`${API_BASE}/orders?user_id=${user_id}`);
       setOrders(res.data);
     } catch (error) {
       console.error(error);

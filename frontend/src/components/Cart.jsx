@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { auth } from '../firebase';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE } from '../config';
 
 const Cart = () => {
   const { isCartOpen, setIsCartOpen, cartItems, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
@@ -62,7 +63,7 @@ const Cart = () => {
       };
 
       if (paymentMethod === 'cod') {
-        await axios.post('https://foodapp233.onrender.com/order', orderData);
+        await axios.post(`${API_BASE}/order`, orderData);
         toast.success('Order placed successfully! 🎉', { duration: 4000 });
         clearCart();
         setIsCartOpen(false);
@@ -81,11 +82,11 @@ const Cart = () => {
         key: 'rzp_test_So5YTBCUuLHHse',
         amount: Math.round(totalPrice * 100),
         currency: 'INR',
-        name: 'FoodApp Premium',
+        name: 'FoodGPT Premium',
         description: 'Food Order Payment',
         handler: async function (response) {
           try {
-            await axios.post('https://foodapp233.onrender.com/order', orderData);
+            await axios.post(`${API_BASE}/order`, orderData);
             toast.success(`Payment successful! 🎉`, { duration: 4000 });
             clearCart();
             setIsCartOpen(false);

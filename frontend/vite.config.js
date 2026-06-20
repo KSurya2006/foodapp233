@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'FoodApp Premium',
-        short_name: 'FoodApp',
+        name: 'FoodGPT Premium',
+        short_name: 'FoodGPT',
         description: 'Premium Food Delivery Web App',
         theme_color: '#f97316',
         background_color: '#121212',

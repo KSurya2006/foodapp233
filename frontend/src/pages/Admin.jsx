@@ -3,6 +3,7 @@ import axios from 'axios';
 import { PlusCircle, Image as ImageIcon, DollarSign, Type, LayoutGrid, CheckCircle, Clock, Package, TrendingUp, ShoppingBag, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE } from '../config';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('add_food');
@@ -29,7 +30,7 @@ const Admin = () => {
 
     setLoading(true);
     try {
-      await axios.post('https://foodapp233.onrender.com/admin/food', {
+      await axios.post(`${API_BASE}/admin/food`, {
         ...formData,
         price: parseFloat(formData.price)
       }, {
@@ -48,7 +49,7 @@ const Admin = () => {
   const fetchOrders = async () => {
     setLoadingOrders(true);
     try {
-      const res = await axios.get('https://foodapp233.onrender.com/orders', {
+      const res = await axios.get(`${API_BASE}/orders`, {
         headers: { 'x-admin-token': 'true' }
       });
       setOrders(res.data);
@@ -67,7 +68,7 @@ const Admin = () => {
 
   const updateOrderStatus = async (id, status) => {
     try {
-      await axios.put(`https://foodapp233.onrender.com/admin/orders/${id}/status`, { status }, {
+      await axios.put(`${API_BASE}/admin/orders/${id}/status`, { status }, {
         headers: { 'x-admin-token': 'true' }
       });
       toast.success(`Order #${id} → ${status}`);

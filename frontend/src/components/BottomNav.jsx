@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, ClipboardList, User, ShoppingBag } from 'lucide-react';
+import { Home, ClipboardList, User, ShoppingBag, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../store/CartContext';
 
@@ -10,6 +10,7 @@ const BottomNav = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Home' },
     { to: '/orders', icon: ClipboardList, label: 'Orders' },
+    { to: '/ai', icon: Sparkles, label: 'FoodGPT' },
     { type: 'cart', icon: ShoppingBag, label: 'Cart' },
     { to: '/profile', icon: User, label: 'Profile' },
   ];
@@ -63,7 +64,7 @@ const BottomNav = () => {
               {({ isActive }) => (
                 <>
                   <div className="relative">
-                    <item.icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
+                    <item.icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : 'scale-100'} ${item.to === '/ai' && isActive ? 'animate-pulse' : ''}`} />
                   </div>
                   <span className={`text-[10px] font-medium ${isActive ? 'font-bold' : ''}`}>{item.label}</span>
                   {isActive && (

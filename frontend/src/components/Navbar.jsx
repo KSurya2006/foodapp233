@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingBag, Search, LogOut, ShieldAlert, X, Bell } from 'lucide-react';
+import { ShoppingBag, Search, LogOut, ShieldAlert, X, Sparkles } from 'lucide-react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useCart } from '../store/CartContext';
@@ -35,6 +35,7 @@ const Navbar = ({ user, isAdminView = false }) => {
         navigate('/');
       } else {
         await signOut(auth);
+        localStorage.removeItem('mockUser');
         toast.success('Logged out successfully');
         navigate('/login');
       }
@@ -73,7 +74,7 @@ const Navbar = ({ user, isAdminView = false }) => {
             {isAdminView ? (
               <>Admin<span className="text-red-500">Portal</span></>
             ) : (
-              <>Food<span className="gradient-text">App</span></>
+              <>Food<span className="gradient-text">GPT</span></>
             )}
           </span>
         </Link>
@@ -87,8 +88,15 @@ const Navbar = ({ user, isAdminView = false }) => {
               </div>
               <input
                 type="text"
-                placeholder="Search for burgers, pizza, drinks..."
-                className="w-full pl-11 pr-4 py-2.5 bg-surface border border-gray-800 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-sm placeholder-gray-600"
+                placeholder="Ask FoodGPT search or browse dishes..."
+                disabled={true}
+                onClick={() => {
+                  navigate('/');
+                  setTimeout(() => {
+                    document.getElementById('main-search')?.focus();
+                  }, 100);
+                }}
+                className="w-full pl-11 pr-4 py-2.5 bg-surface border border-gray-800 rounded-xl focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-sm placeholder-gray-600 cursor-pointer"
               />
             </div>
           </div>
@@ -99,25 +107,43 @@ const Navbar = ({ user, isAdminView = false }) => {
           {/* Mobile Search Toggle */}
           {!isAdminView && (
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => {
+                navigate('/');
+                setTimeout(() => {
+                  document.getElementById('main-search')?.focus();
+                }, 100);
+              }}
               className="md:hidden p-2.5 rounded-xl bg-surface border border-gray-800 hover:border-gray-700 text-gray-400 hover:text-white transition-all"
             >
-              {searchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
+              <Search className="w-4 h-4" />
             </button>
           )}
 
           {/* Nav Links (desktop) */}
           {!isAdminView && (
-            <Link 
-              to="/orders" 
-              className={`hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                location.pathname === '/orders' 
-                  ? 'bg-primary/10 text-primary border border-primary/20' 
-                  : 'text-gray-400 hover:text-white hover:bg-surface'
-              }`}
-            >
-              Orders
-            </Link>
+            <div className="hidden sm:flex items-center gap-2">
+              <Link 
+                to="/orders" 
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  location.pathname === '/orders' 
+                    ? 'bg-primary/10 text-primary border border-primary/20' 
+                    : 'text-gray-400 hover:text-white hover:bg-surface'
+                }`}
+              >
+                Orders
+              </Link>
+              <Link 
+                to="/ai" 
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  location.pathname === '/ai' 
+                    ? 'bg-primary/10 text-primary border border-primary/20' 
+                    : 'text-gray-400 hover:text-white hover:bg-surface'
+                }`}
+              >
+                <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                FoodGPT AI
+              </Link>
+            </div>
           )}
 
           {/* Cart Button */}
@@ -167,28 +193,6 @@ const Navbar = ({ user, isAdminView = false }) => {
           </div>
         </div>
       </div>
-
-      {/* Mobile Search Dropdown */}
-      <AnimatePresence>
-        {searchOpen && !isAdminView && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden mt-3"
-          >
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-              <input
-                ref={searchRef}
-                type="text"
-                placeholder="Search for food..."
-                className="w-full pl-11 pr-4 py-3 bg-surface border border-gray-800 rounded-xl text-sm focus:outline-none focus:border-primary/50 placeholder-gray-600"
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.nav>
   );
 };

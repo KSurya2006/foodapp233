@@ -6,6 +6,7 @@ import { signOut } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Profile = () => {
       try {
         const uid = auth.currentUser?.uid;
         if (uid) {
-          const res = await axios.get(`https://foodapp233.onrender.com/orders?user_id=${uid}`);
+          const res = await axios.get(`${API_BASE}/orders?user_id=${uid}`);
           setOrderCount(res.data.length);
         }
       } catch (e) {
@@ -35,6 +36,7 @@ const Profile = () => {
     try {
       await signOut(auth);
       localStorage.removeItem('adminToken');
+      localStorage.removeItem('mockUser');
       toast.success('Logged out successfully');
       navigate('/login');
     } catch (error) {
@@ -133,7 +135,7 @@ const Profile = () => {
 
       {/* App Info */}
       <div className="text-center mt-8">
-        <p className="text-[10px] text-gray-600">FoodApp Premium v2.0</p>
+        <p className="text-[10px] text-gray-600">FoodGPT Premium v2.0</p>
         <p className="text-[10px] text-gray-700 mt-0.5">Made with ❤️ in India</p>
       </div>
     </motion.div>

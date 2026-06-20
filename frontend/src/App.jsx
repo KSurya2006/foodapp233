@@ -11,9 +11,11 @@ import Login from './pages/Login';
 import OrderHistory from './pages/OrderHistory';
 import Admin from './pages/Admin';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-
 import Profile from './pages/Profile';
+import AiAssistant from './pages/AiAssistant';
+
 import BottomNav from './components/BottomNav';
+import FloatingChatbot from './components/FloatingChatbot';
 
 // Protected Route for Admin
 const AdminRoute = ({ children }) => {
@@ -26,6 +28,13 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const mockUser = localStorage.getItem('mockUser');
+    if (mockUser) {
+      setUser(JSON.parse(mockUser));
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
@@ -72,9 +81,11 @@ function App() {
                   <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
                   <Route path="/orders" element={user ? <OrderHistory /> : <Navigate to="/login" />} />
                   <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
+                  <Route path="/ai" element={user ? <AiAssistant /> : <Navigate to="/login" />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 </Routes>
               </main>
+              {user && <FloatingChatbot />}
               {user && <BottomNav />}
             </>
           } />

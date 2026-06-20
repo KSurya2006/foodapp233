@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { ArrowRight, Utensils, ShieldCheck, Lock, ShieldAlert, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE } from '../config';
 
 const Login = () => {
   const [loginMode, setLoginMode] = useState('user'); // 'user' or 'admin'
@@ -39,6 +40,13 @@ const Login = () => {
     if (!name.trim()) return toast.error('Please enter your name');
     if (!phoneNumber.trim()) return toast.error('Please enter phone number');
     
+    // Test Bypass
+    if (phoneNumber.includes('6281600308')) {
+      setIsOtpSent(true);
+      toast.success('OTP sent successfully (Test Session)!');
+      return;
+    }
+    
     const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`;
 
     setLoading(true);
@@ -65,11 +73,43 @@ const Login = () => {
     if (!otp.trim()) return toast.error('Please enter OTP');
     
     setLoading(true);
+    
+    // Test Bypass
+    if (phoneNumber.includes('6281600308') && otp === '123456') {
+      try {
+        const mockUserData = {
+          uid: 'test-user-uid',
+          phoneNumber: '+916281600308',
+          displayName: name || 'Test User'
+        };
+        localStorage.setItem('mockUser', JSON.stringify(mockUserData));
+        
+        try {
+          await axios.post(`${API_BASE}/users`, {
+            id: mockUserData.uid,
+            phone_number: mockUserData.phoneNumber,
+            name: name || 'Test User'
+          });
+        } catch (err) {
+          console.error('Failed to save user to DB:', err);
+        }
+
+        toast.success(`Welcome, ${name || 'Test User'}! 🎉`);
+        window.location.href = '/';
+        return;
+      } catch (error) {
+        console.error(error);
+        toast.error('Test verification failed.');
+        setLoading(false);
+        return;
+      }
+    }
+    
     try {
       const result = await window.confirmationResult.confirm(otp);
       
       try {
-        await axios.post('https://foodapp233.onrender.com/users', {
+        await axios.post(`${API_BASE}/users`, {
           id: result.user.uid,
           phone_number: result.user.phoneNumber,
           name: name
@@ -184,7 +224,7 @@ const Login = () => {
               {loginMode === 'user' ? (
                 <motion.div key="user-title" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                   <h1 className="text-2xl font-black mb-1">
-                    Food<span className="gradient-text">App</span>
+                    Food<span className="gradient-text">GPT</span>
                   </h1>
                   <p className="text-sm text-gray-500">Sign in to satisfy your cravings</p>
                 </motion.div>
@@ -356,6 +396,18 @@ const Login = () => {
               </motion.form>
             )}
           </AnimatePresence>
+          
+          {/* Test Credentials Display */}
+          {loginMode === 'user' && (
+            <div className="mt-6 p-3 bg-primary/5 border border-primary/20 rounded-xl text-center">
+              <span className="text-[10px] font-black text-primary uppercase tracking-wider block mb-1">
+                🔮 Tester Login Details
+              </span>
+              <p className="text-xs text-gray-400">
+                Phone: <span className="font-bold text-white">6281600308</span> | OTP: <span className="font-bold text-white">123456</span>
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
